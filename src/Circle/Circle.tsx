@@ -1,10 +1,31 @@
-import './Circle.css';
+import { forwardRef } from "react";
+import "./Circle.css";
 
 interface Props {
-  color: string
-  active?: boolean
+  color: "red" | "orange" | "green";
+  active: boolean;
+  onActivate: () => void;
 }
 
-export function Circle({ color, active }: Props) {
-  return <div className="circle circle-green" />;
-}
+export const Circle = forwardRef<HTMLDivElement, Props>(
+  ({ color, active, onActivate }, ref) => {
+    const base = `circle circle-${color}`;
+    const activeClass = active ? ` circle-${color}--active` : "";
+
+    return (
+      <div
+        ref={ref}
+        tabIndex={0}
+        role="button"
+        aria-pressed={active}
+        className={base + activeClass}
+        onClick={onActivate}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            onActivate();
+          }
+        }}
+      />
+    );
+  }
+);
